@@ -19,8 +19,8 @@
 
 (defn lowercase? [s]
   (and
-    (= s (s/lower-case s))
-    (not (s/blank? s))))
+    (not (s/blank? s))
+    (= s (s/lower-case s))))
 
 ; ==========================================
 ;; tests
@@ -44,12 +44,12 @@
     (is (= (frequencies tokens) (bow tokens)))))
 
 (defspec bow-properties num-tests
-         (prop/for-all [v (gen/such-that (complement empty?)
-                                         (gen/vector (gen/such-that lowercase? gen/string-alphanumeric max-tries)))]
-                       (let [res (bow v)]
-                         (and (<= (count (keys res)) (count v))
-                              (= (count v) (reduce + (vals res)))
-                              (= (set v) (set (keys res)))
-                              (= v (into [] (un-frequencies (bow res))))))))
+         (prop/for-all [v (gen/such-that (complement empty?) (gen/vector gen/string-alphanumeric))]
+                       (let [lowered (filter #((complement s/blank?) %) (map #(s/lower-case %) v))
+                             res (bow lowered)]
+                         (and (<= (count (keys res)) (count lowered))
+                              (= (count lowered) (reduce + (vals res)))
+                              (= (set lowered) (set (keys res)))
+                              (= (set lowered) (set (un-frequencies res)))))))
 
 ; ==========================================
