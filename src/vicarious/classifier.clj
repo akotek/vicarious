@@ -1,6 +1,6 @@
-(ns vicarious.core)
+(ns vicarious.classifier)
 
-(defn bag-of-words
-  "unordered set of words with their frequency in the document."
+(defn naive-bayes
+  ""
   [x]
   (println x "Hello, World!"))

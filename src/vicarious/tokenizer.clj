@@ -1,8 +1,13 @@
 (ns vicarious.tokenizer
-  (:require [clojure.string :as s]))
+  (:require [clojure.string :as s]
+            [clojure.set :as set']))
 
 ; ==========================================
 ;; utils
+
+(defn chars-set [xs]
+  (reduce
+    (fn [s w] (set'/union s (set (char-array w)))) #{} xs))
 
 ; ==========================================
 ;; API
@@ -16,5 +21,12 @@
         (s/split t #"\s+")
         (distinct t)
         (into [] t)))
+
+(defn bow [words]
+  (->> words
+       (map #(s/lower-case %))
+       (reduce (fn [s w] (if (contains? s w)
+                           (update s w inc)
+                           (assoc s w 1))) {})))
 
 ; ==========================================
