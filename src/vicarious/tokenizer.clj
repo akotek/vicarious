@@ -43,14 +43,26 @@
 ; ============================================================
 ;; API
 
+(defn bow [s]
+  (-> s
+      (tokenize)
+      (word-count)))
+
 (defn bow-file [file]
   (with-open [rdr (io/reader file)]
     (reduce (fn [m l]
               (as-> l line
-                    (tokenize line)
-                    (word-count line)
+                    (bow line)
                     (merge-with + m line)))
             {} (line-seq rdr))))
 
+(defn bow-dir [path]
+  (as-> path p
+        (io/file p)
+        (file-seq p)
+        (reduce (fn [m f]
+                  (merge-with + m
+                              (bow-file f)))
+                {} (rest p))))
 
 ; ==========================================

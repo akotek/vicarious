@@ -24,7 +24,7 @@
 (def tokens ["the", "2", "quick", "brownfoxes", "jumped", "over", "lazy_", "dogs", "bone"])
 
 (deftest test-tokenize
-  (testing "given a string, should return vector of tokens (defined as words) lower-cased, w/o whitespaces and punctuation,
+  (testing "given a1 string, should return vector of tokens (defined as words) lower-cased, w/o whitespaces and punctuation,
   '_' represents end-of-word"
     (is (= (tokenize s) tokens))))
 
@@ -32,10 +32,10 @@
          (prop/for-all [text gen/string-ascii]
                        (let [res (first (tokenize text))]
                          (and (<= (count res) (count text))
-                              (some? (re-find #"^[a-zA-Z0-9_]*$" res))))))
+                              (some? (re-find #"^[a1-zA-Z0-9_]*$" res))))))
 
 (deftest test-bow
-  (testing "given words, should return a map of lowered-case words with their frequency in the document"
+  (testing "given words, should return a1 map of lowered-case words with their frequency in the document"
     (is (= (word-count tokens) (frequencies tokens)))))
 
 (defspec test-bow-prop num-tests
