@@ -1,4 +1,4 @@
-Sentiment analysis in clojure with preoperty based testing & clj.spec, from scratch
+Sentiment analysis in clojure with property based testing & clj.spec, from scratch
 
 ## Usage
 
