@@ -17,15 +17,18 @@
                  (set/union s1 (set (keys s2))))
                #{})))
 
-(defn priors [p1 & rest]
+(defn priors [classes]
   (let [num-files (map (fn [p]
                          (-> p (io/file) (.listFiles) (count)))
-                       (cons p1 rest))]
-    (map #(/ %1 (reduce + num-files)) num-files)))
+                       classes)]
+    (map #(Math/log
+            (/ %1 (reduce + num-files)))
+         num-files)))
 
 (defn likelihood [bow w words-count voc-count]
-  {w (/ ((fnil inc 0) (get bow w))
-        (+ words-count voc-count))})
+  {w (Math/log
+       (/ ((fnil inc 0) (get bow w))
+          (+ words-count voc-count)))})
 
 (defn likelihoods [bows V]
   (map #(reduce
@@ -37,7 +40,7 @@
 ;; API
 
 (defn train [classes]
-  (let [priors (apply priors classes)
+  (let [priors (priors classes)
         bows (map tokenizer/bow-dir classes)
         V (vocab bows)
         likelihoods (likelihoods bows V)]
@@ -56,7 +59,7 @@
                         '() (line-seq rdr)))]
     (map (fn [pr lh]
            (reduce (fn [s w]
-                     (* (float s) (float (get lh w))))
+                     (+ (float s) (float (get lh w))))
                    pr words))
          priors likelihoods)))
 ; ============================================================
