@@ -56,13 +56,12 @@
    (let [{:keys [words num-words]} (distinct-words corpus)
          word->idx (zipmap words (range num-words))
          shape (vec (repeat 2 num-words))
-         M (->> (context corpus n)
-                (into (sorted-map))
-                (#(do (println %) %))
-                vals
-                (map #(count->array (set/rename-keys % word->idx) (first shape)))
-                (m/array))]
-     {:M (m/add
-           (apply m/zero-matrix shape) M)
+         M (apply m/zero-matrix shape)
+         M' (->> (context corpus n)
+                 (into (sorted-map))
+                 vals
+                 (map #(count->array (set/rename-keys % word->idx) (first shape)))
+                 (m/array))]
+     {:M        (m/add M M')
       :word2idx word->idx})))
 ; ============================================================
