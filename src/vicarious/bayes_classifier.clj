@@ -4,10 +4,6 @@
             [clojure.set :as set]
             [clojure.string :as str]))
 
-;TODO:
-; 2. write generative tests
-; 3. post in SO-code-review
-; 4. answer SO others
 ; ============================================================
 ;; utils
 
@@ -22,12 +18,12 @@
                          (-> p (io/file) (.listFiles) (count)))
                        classes)]
     (map #(Math/log
-            (/ %1 (reduce + num-files)))
+            (/ % (apply + num-files)))
          num-files)))
 
 (defn likelihood [bow w words-count voc-count]
   {w (Math/log
-       (/ ((fnil inc 0) (get bow w))
+       (/ (inc (get bow w 0))
           (+ words-count voc-count)))})
 
 (defn likelihoods [bows V]

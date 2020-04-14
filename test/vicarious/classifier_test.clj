@@ -59,7 +59,7 @@
       (is (= (round-decimal expected) (round-decimal (predict test-doc priors likelihoods V)))))))
 
 (deftest test-prediction-big
-  (testing "tests prediction on Pang & Lee polarity data-set, should ...."
+  (testing "tests prediction on Pang & Lee polarity data-set, should classify correctly pos/neg for simple + narcos docs"
     (let [{:keys [priors likelihoods V classes]} (train (classes polarity-path))
           test1 (str polarity-path "test/a1")
           test2 (str polarity-path "test/a2")

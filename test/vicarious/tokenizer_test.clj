@@ -19,20 +19,19 @@
 ; ==========================================
 ;; tests
 
-(def s "The 2 QUICK Brown-foxes jumped over the lazy_ dog's bone.")
+(def s "The 2 QUICK Brown-foxes jumped over the lazy dog's bone.")
 
-(def tokens ["the", "2", "quick", "brownfoxes", "jumped", "over", "lazy_", "dogs", "bone"])
+(def tokens ["the", "2", "quick", "brownfoxes", "jumped", "over", "lazy", "dogs", "bone"])
 
 (deftest test-tokenize
-  (testing "given a string, should return vector of tokens (defined as words) lower-cased, w/o whitespaces and punctuation,
-  '_' represents end-of-word"
+  (testing "given a string, should return vector of tokens (defined as words) lower-cased, w/o whitespaces and punctuation"
     (is (= (tokenize s) tokens))))
 
 (defspec test-tokenize-props num-tests
          (prop/for-all [text gen/string-ascii]
                        (let [res (first (tokenize text))]
                          (and (<= (count res) (count text))
-                              (some? (re-find #"^[a-zA-Z0-9_]*$" res))))))
+                              (some? (re-find #"^[a-zA-Z0-9]*$" res))))))
 
 (deftest test-bow
   (testing "given words, should return a map of lowered-case words with their frequency in the document"

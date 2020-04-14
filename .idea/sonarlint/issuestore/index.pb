@@ -16,7 +16,23 @@ K
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
 R
 "src/vicarious/bayes_classifier.clj,b/f/bffec0ed3a1646f8d3f00214607640f83d341573
-V
-&train/polarity-data/poldata.README.2.0,6/6/661349c94c2629a9e9b08338d721553f4bd09422
-H
-train/simple-data/test/a,e/7/e7907bd4d00a78d007b9a4e0110befe3aa613287
+f
+6test/vicarious/train/polarity-data/pos/cv000_29590.txt,d/5/d554a053920730c2c8ae48534cb9f7cee4b58387
+e
+5test/vicarious/train/polarity-data/poldata.README.2.0,6/8/6856054470bda4ef1a61bf3c1ca69b07ee99c8b9
+f
+6test/vicarious/train/polarity-data/pos/cv665_29538.txt,b/c/bcd4548e3d863596c21408e2caba506222f3419b
+Z
+*test/vicarious/train/polarity-data/test/a2,5/6/563cec1cbd316412d9d718c25ef2f01990d49235
+Z
+*test/vicarious/train/polarity-data/test/a1,b/3/b323c926172b9431cb56af481f1b0c36a0ca3192
+f
+6test/vicarious/train/polarity-data/test/narcos-mex-pos,5/3/53cdfa141662ac9e567779e07c719394ab7f8052
+f
+6test/vicarious/train/polarity-data/test/narcos-mex-neg,1/b/1b95722a0b84ae3709e3480d357abded205e082b
+W
+'test/vicarious/train/simple-data/test/a,3/a/3ad3b7e48ecd52353ccfc96753797bdb48de1079
+P
+ test/vicarious/word2vec_test.clj,0/7/070e007834f4aece715ad795070d80c30ac4b54c
+J
+src/vicarious/word2vec.clj,3/d/3d4c2bc932b9599220a77ca9725bb210d6b0b3d1

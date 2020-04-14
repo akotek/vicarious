@@ -31,14 +31,13 @@
        (reduce count' {})))
 
 (defn tokenize [text]
-  (as-> text t
-        (s/trim t)
-        (filter #(or (Character/isSpace %) (Character/isLetterOrDigit ^Character %) (= % \_)) t)
-        (apply str t)
-        (s/lower-case t)
-        (s/split t #"\s+")
-        ;(distinct t)
-        (into [] t)))
+  (->> text
+       (s/trim)
+       (filter #(or (Character/isSpace %) (Character/isLetterOrDigit ^Character %)))
+       (apply str)
+       (s/lower-case)
+       (#(s/split % #"\s+"))
+       (into [])))
 
 ; ============================================================
 ;; API
