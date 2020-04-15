@@ -2,38 +2,27 @@
   (:require [clojure.set :as set]
             [clojure.core.matrix :as m]))
 
-(use '(clojure.core.matrix.operators))
-
 ;TODO
 ;1. post co-occurrence in SO clojure
 ;2. transform test-corpus to meir-ariel-corpus
 ; ============================================================
 ;; utils
 
-(defn deep-merge-with [f & maps]
-  (apply
-    (fn m [& maps]
-      (if (every? map? maps)
-        (apply merge-with m maps)
-        (apply f maps)))
-    maps))
+(defn count->array [i j shape]
+  (-> (m/zero-array shape)
+      (m/set-indices [[i j]
+                      [j i]] [1. 1.])))
 
-(defn co-occur [xs n]
-  (->> xs
+(defn co-occur [coll word->idx shape n]
+  (->> coll
        (partition (inc n) 1)
-       (map (fn [xs]
-              (let [nth' (nth xs n)
-                    fst (first xs)]
-                {fst  {nth' 1}
-                 nth' {fst 1}})))
-       (apply merge-with merge)))
+       (reduce (fn [M1 xs]
+                 (let [e1 (word->idx (first xs))
+                       e2 (word->idx (nth xs n))
+                       M2 (count->array e1 e2 shape)]
+                   (m/add M1 M2)))
+               (m/zero-array shape))))
 
-(defn count->array [m n]
-  (m/array
-    (for [i (range n)]
-      (if (contains? (set (keys m)) i)
-        (get m i)
-        0))))
 ; ============================================================
 ;; API
 
@@ -41,27 +30,18 @@
   (let [words (reduce (fn [s xs]
                         (set/union s (set xs)))
                       #{} nested-v)]
-    {:words     (vec (sort words))
+    {:words     (vec  (sort words))
      :num-words (count words)}))
 
-(defn context [corpus n]
-  (reduce (fn [bigm m]
-            (deep-merge-with + bigm (co-occur m n)))
-          {} corpus))
+(defn co-occurrence-matrix [corpus n]
+  (let [{:keys [words num-words]} (distinct-words corpus)
+        word->idx (zipmap words (range num-words))
+        shape (vec (repeat 2 num-words))
+        M (reduce (fn [M' coll]
+                    (m/add M'
+                           (co-occur coll word->idx shape n)))
+                  (m/zero-array shape) corpus)]
+    {:M        M
+     :word2idx word->idx}))
 
-(defn co-occurrence-matrix
-  ([corpus]
-   (co-occurrence-matrix corpus 2))
-  ([corpus n]
-   (let [{:keys [words num-words]} (distinct-words corpus)
-         word->idx (zipmap words (range num-words))
-         shape (vec (repeat 2 num-words))
-         M (apply m/zero-matrix shape)
-         M' (->> (context corpus n)
-                 (into (sorted-map))
-                 vals
-                 (map #(count->array (set/rename-keys % word->idx) (first shape)))
-                 (m/array))]
-     {:M        (m/add M M')
-      :word2idx word->idx})))
 ; ============================================================
