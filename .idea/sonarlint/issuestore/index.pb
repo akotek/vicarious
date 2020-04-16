@@ -40,3 +40,7 @@ W
 'test/vicarious/train/simple-data/neg/a1,7/7/77830407586547b19d15440f9ff59e6c16bb76b6
 W
 'test/vicarious/train/simple-data/neg/a3,7/9/799aa60d96cc696f82e05cac1825912f5cb86c22
+;
+.nrepl-port,4/2/4262357d3ef9a6b775ba9d2dfac4d452cc44c0ee
+S
+#.idea/sonarlint/issuestore/index.pb,9/f/9fe84ebb15faf917b7def6236dba604453cc61e0

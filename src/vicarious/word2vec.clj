@@ -8,24 +8,22 @@
 ; ============================================================
 ;; utils
 
-(defn count->array [indices shape]
-  (let [values (-> (m/row-count indices) (m/new-vector) (m/add 1))]
-    (-> (m/zero-array shape)
-      (m/set-indices indices values))))
+(defn matrix-values [indices]
+  (-> (m/row-count indices)
+      (m/new-vector)
+      (m/add 1)))
 
-(defn co-occur [coll word->idx shape n]
+(defn co-occur [M coll word->idx n]
   (->> coll
        (partition (inc n) 1)
-       (reduce (fn [M1 xs]
+       (reduce (fn [M' xs]
                  (let [indices (reduce (fn [coll w]
                                          (let [fst (word->idx (first xs))
                                                nxt (word->idx w)]
-                                           (conj coll
-                                                 [fst nxt] [nxt fst])))
-                                       [] (next xs))
-                       M2 (count->array indices shape)]
-                   (m/add M1 M2)))
-               (m/zero-array shape))))
+                                           (conj coll [fst nxt] [nxt fst])))
+                                       [] (next xs))]
+                   (m/set-indices M' indices (matrix-values indices))))
+               M)))
 
 ; ============================================================
 ;; API
@@ -42,8 +40,7 @@
         word->idx (zipmap words (range num-words))
         shape (vec (repeat 2 num-words))
         M (reduce (fn [M' coll]
-                    (m/add M'
-                           (co-occur coll word->idx shape n)))
+                    (co-occur M' coll word->idx n))
                   (m/zero-array shape) corpus)]
     {:M        M
      :word2idx word->idx}))
