@@ -36,3 +36,7 @@ P
  test/vicarious/word2vec_test.clj,0/7/070e007834f4aece715ad795070d80c30ac4b54c
 J
 src/vicarious/word2vec.clj,3/d/3d4c2bc932b9599220a77ca9725bb210d6b0b3d1
+W
+'test/vicarious/train/simple-data/neg/a1,7/7/77830407586547b19d15440f9ff59e6c16bb76b6
+W
+'test/vicarious/train/simple-data/neg/a3,7/9/799aa60d96cc696f82e05cac1825912f5cb86c22

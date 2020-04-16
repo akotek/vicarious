@@ -8,18 +8,22 @@
 ; ============================================================
 ;; utils
 
-(defn count->array [i j shape]
-  (-> (m/zero-array shape)
-      (m/set-indices [[i j]
-                      [j i]] [1. 1.])))
+(defn count->array [indices shape]
+  (let [values (-> (m/row-count indices) (m/new-vector) (m/add 1))]
+    (-> (m/zero-array shape)
+      (m/set-indices indices values))))
 
 (defn co-occur [coll word->idx shape n]
   (->> coll
        (partition (inc n) 1)
        (reduce (fn [M1 xs]
-                 (let [e1 (word->idx (first xs))
-                       e2 (word->idx (nth xs n))
-                       M2 (count->array e1 e2 shape)]
+                 (let [indices (reduce (fn [coll w]
+                                         (let [fst (word->idx (first xs))
+                                               nxt (word->idx w)]
+                                           (conj coll
+                                                 [fst nxt] [nxt fst])))
+                                       [] (next xs))
+                       M2 (count->array indices shape)]
                    (m/add M1 M2)))
                (m/zero-array shape))))
 
