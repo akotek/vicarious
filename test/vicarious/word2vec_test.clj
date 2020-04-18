@@ -54,10 +54,10 @@
           expected (m/array [[18.52157747 6.47697214]
                              [49.81310011 1.91182038]
                              [81.10462276 -2.65333138]])
-          M (reduce-to-k-dim A 2)
-          diff-impl (truncated-svd A 2)]
+          expected2 (truncated-svd A 2)
+          M (reduce-to-k-dim A 2)]
       (is (true? (m/equals expected M 0.5)))
-      (is (true? (m/equals expected diff-impl 0.5))))))
+      (is (true? (m/equals expected2 M 0.5))))))
 
 (deftest test-dim-reduction-corpus
   (testing "should return reduced M matrix to k dimension, on given corpus data"
