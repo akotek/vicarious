@@ -46,4 +46,23 @@
       (is (= (m/shape expected-M) (m/shape M)))
       (is (true? (m/e== expected-M M))))))
 
+(deftest test-dim-reduction
+  (testing "should return a reduced M matrix to k dimension"
+    (let [A (m/array [[1 2 3 4 5 6 7 8 9 10]
+                      [11 12 13 14 15 16 17 18 19 20]
+                      [21 22 23 24 25 26 27 28 29 30]])
+          expected (m/array [[18.52157747 6.47697214]
+                             [49.81310011 1.91182038]
+                             [81.10462276 -2.65333138]])
+          M (reduce-to-k-dim A 2)
+          diff-impl (truncated-svd A 2)]
+      (is (true? (m/equals expected M 0.5)))
+      (is (true? (m/equals expected diff-impl 0.5))))))
+
+(deftest test-dim-reduction-corpus
+  (testing "should return reduced M matrix to k dimension, on given corpus data"
+    (let [{:keys [M]} (co-occurrence-matrix corpus 1)
+          reduced (reduce-to-k-dim M 2)]
+      (is (= (m/shape reduced) [10 2])))))
+
 ; ==========================================

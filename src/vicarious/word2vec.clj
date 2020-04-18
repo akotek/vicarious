@@ -1,12 +1,20 @@
 (ns vicarious.word2vec
   (:require [clojure.set :as set]
-            [clojure.core.matrix :as m]))
+            [clojure.core.matrix :as m]
+            [clojure.core.matrix.linear :as lin]
+            [kublai.core :as kublai]))
+
+(m/set-current-implementation :vectorz)
 
 ;TODO
 ;1. post co-occurrence in SO clojure
 ;2. transform test-corpus to meir-ariel-corpus
 ; ============================================================
 ;; utils
+
+(defn truncated-svd [M k]
+  (let [{:keys [U S]} (kublai/svd M k)]
+    (m/mmul U S)))
 
 (defn matrix-values [indices]
   (-> (m/row-count indices)
@@ -44,5 +52,11 @@
                   (m/zero-array shape) corpus)]
     {:M        M
      :word2idx word->idx}))
+
+(defn reduce-to-k-dim [M k]
+  (let [{:keys [U S]} (lin/svd M {:return [:U :S]})
+        U' (->> U (m/columns) (take k) (m/transpose))
+        S' (->> S (take k) (m/diagonal-matrix))]
+    (m/mmul U' S')))
 
 ; ============================================================

@@ -14,12 +14,31 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.5" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/all:1.1.2" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/core:1.1.2" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/native_ref-java:1.1" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/native_system-java:1.1" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/netlib-native_ref-linux-armhf:1.1:natives" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/netlib-native_ref-linux-i686:1.1:natives" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/netlib-native_ref-linux-x86_64:1.1:natives" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/netlib-native_ref-osx-x86_64:1.1:natives" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/netlib-native_ref-win-i686:1.1:natives" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/netlib-native_ref-win-x86_64:1.1:natives" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/netlib-native_system-linux-armhf:1.1:natives" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/netlib-native_system-linux-i686:1.1:natives" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/netlib-native_system-linux-x86_64:1.1:natives" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/netlib-native_system-osx-x86_64:1.1:natives" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/netlib-native_system-win-i686:1.1:natives" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil.netlib/netlib-native_system-win-x86_64:1.1:natives" level="project" />
+    <orderEntry type="library" name="Leiningen: com.github.fommil/jniloader:1.1" level="project" />
+    <orderEntry type="library" name="Leiningen: kublai:0.9" level="project" />
     <orderEntry type="library" name="Leiningen: net.mikera/clojure-utils:0.8.0" level="project" />
     <orderEntry type="library" name="Leiningen: net.mikera/core.matrix:0.62.0" level="project" />
     <orderEntry type="library" name="Leiningen: net.mikera/mathz:0.3.0" level="project" />
     <orderEntry type="library" name="Leiningen: net.mikera/randomz:0.3.0" level="project" />
     <orderEntry type="library" name="Leiningen: net.mikera/vectorz-clj:0.48.0" level="project" />
     <orderEntry type="library" name="Leiningen: net.mikera/vectorz:0.66.0" level="project" />
+    <orderEntry type="library" name="Leiningen: net.sourceforge.f2j/arpack_combined_all:0.1" level="project" />
     <orderEntry type="library" name="Leiningen: nrepl:0.6.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.10.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/core.specs.alpha:0.2.44" level="project" />
