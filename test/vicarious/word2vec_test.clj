@@ -54,15 +54,24 @@
           expected (m/array [[18.52157747 6.47697214]
                              [49.81310011 1.91182038]
                              [81.10462276 -2.65333138]])
-          expected2 (truncated-svd A 2)
           M (reduce-to-k-dim A 2)]
-      (is (true? (m/equals expected M 0.5)))
-      (is (true? (m/equals expected2 M 0.5))))))
+      (is (true? (m/equals expected M 0.5))))))
 
 (deftest test-dim-reduction-corpus
   (testing "should return reduced M matrix to k dimension, on given corpus data"
     (let [{:keys [M]} (co-occurrence-matrix corpus 1)
           reduced (reduce-to-k-dim M 2)]
       (is (= (m/shape reduced) [10 2])))))
+
+(deftest test-plot-embeddings
+  (testing "should plot (scatter-plot) embeddings of words in 2-dim, 4x words in rectangle like, 1x in middle"
+    (let [M (m/array [[1, 1]
+                      [-1, -1]
+                      [1, -1]
+                      [-1, 1]
+                      [0, 0]])
+          words ["bucharest" "its" "the" "time" "of"]
+          word->idx (zipmap words (range (count words)))]
+      (plot-embeddings M word->idx words))))
 
 ; ==========================================

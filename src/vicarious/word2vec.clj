@@ -2,19 +2,12 @@
   (:require [clojure.set :as set]
             [clojure.core.matrix :as m]
             [clojure.core.matrix.linear :as lin]
-            [kublai.core :as kublai]))
+            [oz.core :as oz]))
 
 (m/set-current-implementation :vectorz)
 
-;TODO
-;1. post co-occurrence in SO clojure
-;2. transform test-corpus to meir-ariel-corpus
 ; ============================================================
 ;; utils
-
-(defn truncated-svd [M k]
-  (let [{:keys [U S]} (kublai/svd M k)]
-    (m/mmul U S)))
 
 (defn matrix-values [indices]
   (-> (m/row-count indices)
@@ -58,5 +51,18 @@
         U' (->> U (m/columns) (take k) (m/transpose))
         S' (->> S (take k) (m/diagonal-matrix))]
     (m/mmul U' S')))
+
+(defn plot-embeddings [M word->idx words]
+  (let [indices (vals (select-keys word->idx words))
+        sliced (m/emap #(m/select M % :all) indices)
+        x-cors (m/get-column sliced 0)
+        y-cors (m/get-column sliced 1)
+        spec {:data {:values (map (fn [x y w] {:x x :y y :label w}) x-cors y-cors words)}
+              :encoding {:x {:field "x" :type "quantitative"}
+                         :y {:field "y" :type "quantitative"}
+                         :text {:field "label" :fontSize 1 :type "nominal"}}
+              :mark "text"}]
+    (oz/start-plot-server!)
+    (oz/view! spec)))
 
 ; ============================================================
