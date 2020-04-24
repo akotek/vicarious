@@ -12,3 +12,5 @@ pom.xml.asc
 .hg/
 .DS_Store
 .idea/
+vicarious.iml
+.idea/sonarlint/issuestore/index.pb

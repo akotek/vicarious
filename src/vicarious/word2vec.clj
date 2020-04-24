@@ -60,8 +60,9 @@
         spec {:data {:values (map (fn [x y w] {:x x :y y :label w}) x-cors y-cors words)}
               :encoding {:x {:field "x" :type "quantitative"}
                          :y {:field "y" :type "quantitative"}
-                         :text {:field "label" :fontSize 1 :type "nominal"}}
-              :mark "text"}]
+                         :text {:field "label" :type "nominal"}}
+              :layer [{:mark "text"},
+                      {:mark "point"}]}]
     (oz/start-plot-server!)
     (oz/view! spec)))
 
