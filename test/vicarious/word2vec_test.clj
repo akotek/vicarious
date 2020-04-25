@@ -1,6 +1,7 @@
 (ns vicarious.word2vec-test
   (:require [clojure.test :refer :all]
             [vicarious.word2vec :refer :all]
+            [vicarious.text-processor :as tp]
             [clojure.core.matrix :as m]))
 
 ; ==========================================
@@ -18,6 +19,13 @@
                                 ["All", "ends", "that", "gold", "All's", "glitters", "isn't", "well"]
                                 [END])))
 
+(defn pick-sample-words [corpus n]
+  (let [w-per-doc (/ n (/ (count corpus) 2))]
+    (->> corpus
+         shuffle
+         (take-nth 2)
+         (mapcat #(take w-per-doc (shuffle %))))))
+
 ; ==========================================
 ;; tests
 
@@ -30,7 +38,7 @@
 
 (deftest test-co-occurrence-matrix
   (testing "should return a symmetric matrix M of shape (unique words) with entries as the context and word to row/col mapping"
-    (let [word->idx (zipmap corpus-words (range (count corpus-words)))
+    (let [word->idx' (zipmap corpus-words (range (count corpus-words)))
           expected-M (m/array [[0., 0., 0., 0., 0., 0., 1., 0., 0., 1.,],
                                [0., 0., 1., 1., 0., 0., 0., 0., 0., 0.,],
                                [0., 1., 0., 0., 0., 0., 0., 0., 1., 0.,],
@@ -41,8 +49,8 @@
                                [0., 0., 0., 0., 0., 1., 1., 0., 0., 0.,],
                                [0., 0., 1., 0., 1., 1., 0., 0., 0., 1.,],
                                [1., 0., 0., 1., 1., 0., 0., 0., 1., 0.,]])
-          {:keys [M word2idx]} (co-occurrence-matrix corpus 1)]
-      (is (= word->idx word2idx))
+          {:keys [M word->idx]} (co-occurrence-matrix corpus 1)]
+      (is (= word->idx' word->idx))
       (is (= (m/shape expected-M) (m/shape M)))
       (is (true? (m/e== expected-M M))))))
 
@@ -74,4 +82,13 @@
           word->idx (zipmap words (range (count words)))]
       (plot-embeddings M word->idx words))))
 
+(def omer-path "test/vicarious/train/omer-data/")
+
+(deftest test-omer-data
+  (testing "should plot a co-occurrence analysis on omer's data"
+    (let [omer-corpus (tp/corpus omer-path)
+          {:keys [M word->idx]} (co-occurrence-matrix omer-corpus 4)
+          M-normd (->> (reduce-to-k-dim M 2) (map #(m/normalise %)) (m/matrix))
+          words (pick-sample-words omer-corpus 10)]
+      (plot-embeddings M-normd word->idx words))))
 ; ==========================================

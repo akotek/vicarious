@@ -43,8 +43,8 @@
         M (reduce (fn [M' coll]
                     (co-occur M' coll word->idx n))
                   (m/zero-array shape) corpus)]
-    {:M        M
-     :word2idx word->idx}))
+    {:M         M
+     :word->idx word->idx}))
 
 (defn reduce-to-k-dim [M k]
   (let [{:keys [U S]} (lin/svd M {:return [:U :S]})
