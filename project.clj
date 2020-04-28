@@ -8,5 +8,5 @@
                  [org.clojure/test.generative "1.0.0"]
                  [net.mikera/core.matrix "0.62.0"]
                  [net.mikera/vectorz-clj "0.48.0"]
-                 [metasoarous/oz "1.6.0-alpha6"]]
+                 [incanter "1.9.3"]]
   :repl-options {:init-ns vicarious.core})

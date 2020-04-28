@@ -1,9 +1,9 @@
 (ns vicarious.word2vec
   (:require [clojure.set :as set]
             [clojure.core.matrix :as m]
-            [clojure.core.matrix.linear :as lin]
-            [oz.core :as oz]))
+            [clojure.core.matrix.linear :as lin]))
 
+(use '(incanter core charts))
 (m/set-current-implementation :vectorz)
 
 ; ============================================================
@@ -52,18 +52,17 @@
         S' (->> S (take k) (m/diagonal-matrix))]
     (m/mmul U' S')))
 
-(defn plot-embeddings [M word->idx words]
+(defn plot-embeddings [M word->idx title words]
   (let [indices (vals (select-keys word->idx words))
         sliced (m/emap #(m/select M % :all) indices)
         x-cors (m/get-column sliced 0)
         y-cors (m/get-column sliced 1)
-        spec {:data {:values (map (fn [x y w] {:x x :y y :label w}) x-cors y-cors words)}
-              :encoding {:x {:field "x" :type "quantitative"}
-                         :y {:field "y" :type "quantitative"}
-                         :text {:field "label" :type "nominal"}}
-              :layer [{:mark "text"},
-                      {:mark "point"}]}]
-    (oz/start-plot-server!)
-    (oz/view! spec)))
+        plot (scatter-plot x-cors y-cors
+                           :title title
+                           :x-label "X"
+                           :y-label "Y")]
+    (view plot)
+    (doseq [[x y w] (map list x-cors y-cors words)]
+      (add-text plot x (+ 0.03 y) w))))
 
 ; ============================================================
