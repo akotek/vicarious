@@ -40,7 +40,17 @@ W
 'test/vicarious/train/simple-data/neg/a1,7/7/77830407586547b19d15440f9ff59e6c16bb76b6
 W
 'test/vicarious/train/simple-data/neg/a3,7/9/799aa60d96cc696f82e05cac1825912f5cb86c22
-;
-.nrepl-port,4/2/4262357d3ef9a6b775ba9d2dfac4d452cc44c0ee
 S
 #.idea/sonarlint/issuestore/index.pb,9/f/9fe84ebb15faf917b7def6236dba604453cc61e0
+4
+TODO,b/6/b698c11e84460ed5999bfeb5cbf25b865c238f3c
+X
+(test/vicarious/train/omer-data/bucharest,0/f/0fdc3cc2730e079ef9951c3f3543664c2ec294bd
+]
+-test/vicarious/train/omer-data/i-count-on-you,f/0/f012c5b5c0d3e850df4e7a4593d493bfa687b1ba
+d
+4test/vicarious/train/omer-data/after-all-these-years,2/7/2769e159608ee38834d35c71a2fb3cef85cbcd4d
+P
+ src/vicarious/text_processor.clj,1/2/125e42ff71910d8e54ae5b996583f09a92e9087a
+H
+test/vicarious/stopwords,c/7/c76d5fc12218bf9b59540053b6818cb65cf51111

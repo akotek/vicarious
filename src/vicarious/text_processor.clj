@@ -18,3 +18,9 @@
        file-seq
        rest
        (map tokens)))
+
+(defn bow [corpus]
+  (->> corpus
+       (reduce (fn [m doc]
+                 (merge-with + m (frequencies doc)))
+               {})))

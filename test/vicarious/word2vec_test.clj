@@ -2,7 +2,8 @@
   (:require [clojure.test :refer :all]
             [vicarious.word2vec :refer :all]
             [vicarious.text-processor :as tp]
-            [clojure.core.matrix :as m]))
+            [clojure.core.matrix :as m]
+            [clojure.string :as str]))
 
 ; ==========================================
 ;; utils
@@ -19,13 +20,17 @@
                                 ["All", "ends", "that", "gold", "All's", "glitters", "isn't", "well"]
                                 [END])))
 
-(defn pick-sample-words [corpus n]
-  (let [w-per-doc (/ n (/ (count corpus) 2))]
-    (->> corpus
-         shuffle
-         (take-nth 2)
-         (mapcat #(take w-per-doc (shuffle %))))))
+(def stopwords "test/vicarious/misc/stopwords")
 
+(defn most-freq-words [corpus n]
+  (let [stops (->> (slurp stopwords) (str/split-lines) set)]
+    (->> corpus
+         tp/bow
+         (remove #(contains? (conj stops START END) (key %)))
+         (sort-by val)
+         reverse
+         (take n)
+         keys)))
 ; ==========================================
 ;; tests
 
@@ -80,15 +85,15 @@
                       [0, 0]])
           words ["bucharest" "its" "the" "time" "of"]
           word->idx (zipmap words (range (count words)))]
-      (plot-embeddings M word->idx words))))
+      (plot-embeddings M word->idx "simple-test" words))))
 
 (def omer-path "test/vicarious/train/omer-data/")
 
 (deftest test-omer-data
-  (testing "should plot a co-occurrence analysis on omer's data"
+  (testing "should plot a co-occurrence sample of most frequent words in omer's data"
     (let [omer-corpus (tp/corpus omer-path)
           {:keys [M word->idx]} (co-occurrence-matrix omer-corpus 4)
           M-normd (->> (reduce-to-k-dim M 2) (map #(m/normalise %)) (m/matrix))
-          words (pick-sample-words omer-corpus 10)]
-      (plot-embeddings M-normd word->idx words))))
+          words (most-freq-words omer-corpus 20)]
+      (plot-embeddings M-normd word->idx "omer-test" words))))
 ; ==========================================
