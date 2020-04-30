@@ -8,5 +8,6 @@
                  [org.clojure/test.generative "1.0.0"]
                  [net.mikera/core.matrix "0.62.0"]
                  [net.mikera/vectorz-clj "0.48.0"]
-                 [incanter "1.9.3"]]
+                 [incanter "1.9.3"]
+                 [org.jsoup/jsoup "1.7.3"]]
   :repl-options {:init-ns vicarious.core})
