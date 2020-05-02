@@ -4,11 +4,13 @@ current:
 1. Bayes classifier.
 2. word2vec (gensim)
 
+
+![the inspiration](omer.jpg)
+ 
 todo:
 1. BPE encoding
 2. logistic regression
 3. machine translation
 
 ## Usage
-
 Just run the tests...
