@@ -29,8 +29,7 @@
          (remove #(contains? (conj stops START END) (key %)))
          (sort-by val)
          reverse
-         (take n)
-         keys)))
+         (take n))))
 ; ==========================================
 ;; tests
 
@@ -93,7 +92,7 @@
   (testing "should plot a co-occurrence sample of most frequent words in omer's data"
     (let [omer-corpus (tp/corpus omer-path)
           {:keys [M word->idx]} (co-occurrence-matrix omer-corpus 4)
-          M-normd (->> (reduce-to-k-dim M 2) (map #(m/normalise %)) (m/matrix))
+          M-normd (->> (reduce-to-k-dim M 2) (map #(m/normalise %)) m/matrix)
           words (most-freq-words omer-corpus 20)]
-      (plot-embeddings M-normd word->idx "omer-test" words))))
+      (plot-embeddings M-normd word->idx "omer-test" (keys words)))))
 ; ==========================================

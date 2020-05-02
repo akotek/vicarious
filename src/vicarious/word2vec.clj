@@ -63,6 +63,6 @@
                            :y-label "Y")]
     (view plot)
     (doseq [[x y w] (map list x-cors y-cors words)]
-      (add-text plot x (+ 0.03 y) w))))
+      (add-text plot x (+ 0.01 y) w))))
 
 ; ============================================================

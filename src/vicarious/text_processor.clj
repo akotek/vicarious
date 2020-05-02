@@ -1,6 +1,7 @@
 (ns vicarious.text-processor
   (:require [clojure.java.io :as io]
-            [vicarious.tokenizer :as tk]))
+            [vicarious.tokenizer :as tk]
+            [vicarious.scraper :as scp]))
 
 (defn meta-data [tokens]
   (concat ["<START>"] tokens ["<END>"]))
@@ -24,3 +25,11 @@
        (reduce (fn [m doc]
                  (merge-with + m (frequencies doc)))
                {})))
+
+(defn create-corpus-mem []
+  (for [song (scp/scrape-omer)]
+    (->> song :text tk/tokenize meta-data)))
+
+(defn create-corpus-disk [path]
+  (for [song (scp/scrape-omer)]
+    (spit (str path (.replace (:title song) " " "-")) (:text song))))

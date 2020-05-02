@@ -1,7 +1,5 @@
 
 ;TODO
-;1. post co-occurrence in SO clojure
-;2. plot OmerAdam songs
-
-3. run same with gensim
-4. check differences
+1. Finish word-embeddings on omers data
+2. analyse it words (with BOW & viz)
+3. classify it

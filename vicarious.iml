@@ -94,6 +94,7 @@
     <orderEntry type="library" name="Leiningen: org.danlarkin/clojure-json:1.1" level="project" />
     <orderEntry type="library" name="Leiningen: org.jfree/jcommon:1.0.23" level="project" />
     <orderEntry type="library" name="Leiningen: org.jfree/jfreechart:1.0.19" level="project" />
+    <orderEntry type="library" name="Leiningen: org.jsoup/jsoup:1.7.3" level="project" />
     <orderEntry type="library" name="Leiningen: org.mongodb/mongo-java-driver:2.14.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.scilab.forge/jlatexmath-font-cyrillic:1.0.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.scilab.forge/jlatexmath-font-greek:1.0.6" level="project" />

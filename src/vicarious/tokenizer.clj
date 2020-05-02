@@ -36,8 +36,7 @@
        (filter #(or (Character/isSpace %) (Character/isLetterOrDigit ^Character %)))
        (apply str)
        (s/lower-case)
-       (#(s/split % #"\s+"))
-       (into [])))
+       (#(s/split % #"\s+"))))
 
 ; ============================================================
 ;; API
