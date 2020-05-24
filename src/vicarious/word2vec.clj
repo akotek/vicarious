@@ -3,7 +3,6 @@
             [clojure.core.matrix :as m]
             [clojure.core.matrix.linear :as lin]))
 
-(use '(incanter core charts))
 (m/set-current-implementation :vectorz)
 
 ; ============================================================
@@ -33,11 +32,11 @@
   (let [words (reduce (fn [s xs]
                         (set/union s (set xs)))
                       #{} nested-v)]
-    {:words     (vec  (sort words))
-     :num-words (count words)}))
+    (vec (sort words))))
 
 (defn co-occurrence-matrix [corpus n]
-  (let [{:keys [words num-words]} (distinct-words corpus)
+  (let [words (distinct-words corpus)
+        num-words (count words)
         word->idx (zipmap words (range num-words))
         shape (vec (repeat 2 num-words))
         M (reduce (fn [M' coll]
@@ -52,17 +51,15 @@
         S' (->> S (take k) (m/diagonal-matrix))]
     (m/mmul U' S')))
 
-(defn plot-embeddings [M word->idx title words]
-  (let [indices (vals (select-keys word->idx words))
-        sliced (m/emap #(m/select M % :all) indices)
-        x-cors (m/get-column sliced 0)
-        y-cors (m/get-column sliced 1)
-        plot (scatter-plot x-cors y-cors
-                           :title title
-                           :x-label "X"
-                           :y-label "Y")]
-    (view plot)
-    (doseq [[x y w] (map list x-cors y-cors words)]
-      (add-text plot x (+ 0.01 y) w))))
+(defn sigmoid [x]
+  (/ 1
+     (+ 1 (Math/exp (- x)))))
+
+(defn softmax [x]
+  (let [f (fn [v] (let [em (m/exp v)]
+                    (m/div em (m/esum em))))]
+    (if (> (count (m/shape x)) 1)
+      (mapv f x)
+      (f x))))
 
 ; ============================================================

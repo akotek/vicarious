@@ -1,12 +1,17 @@
 (ns vicarious.word2vec-test
   (:require [clojure.test :refer :all]
             [vicarious.word2vec :refer :all]
+            [vicarious.plotter :as plt]
             [vicarious.text-processor :as tp]
             [clojure.core.matrix :as m]
             [clojure.string :as str]))
 
 ; ==========================================
 ;; utils
+
+(def HIGH_PRECISION 0.2)
+
+(def LOW_PRECISION 0.5)
 
 (def START "<START>")
 
@@ -27,17 +32,15 @@
     (->> corpus
          tp/bow
          (remove #(contains? (conj stops START END) (key %)))
-         (sort-by val)
-         reverse
+         (sort-by val >)
          (take n))))
 ; ==========================================
 ;; tests
 
 (deftest test-distinct-words
-  (testing "should return sorted distinct words of corpus and it num of words"
-    (let [{:keys [words num-words]} (distinct-words corpus)]
-      (is (= (count corpus-words) num-words))
-      (is (= corpus-words words)))))
+  (let [words (distinct-words corpus)]
+    (is (= (count corpus-words) (count words)))
+    (is (= corpus-words words))))
 
 
 (deftest test-co-occurrence-matrix
@@ -67,7 +70,7 @@
                              [49.81310011 1.91182038]
                              [81.10462276 -2.65333138]])
           M (reduce-to-k-dim A 2)]
-      (is (true? (m/equals expected M 0.5))))))
+      (is (true? (m/equals expected M LOW_PRECISION))))))
 
 (deftest test-dim-reduction-corpus
   (testing "should return reduced M matrix to k dimension, on given corpus data"
@@ -84,15 +87,30 @@
                       [0, 0]])
           words ["bucharest" "its" "the" "time" "of"]
           word->idx (zipmap words (range (count words)))]
-      (plot-embeddings M word->idx "simple-test" words))))
+      (plt/plot-embeddings M word->idx "simple-test" words))))
 
 (def omer-path "test/vicarious/train/omer-data/")
 
-(deftest test-omer-data
+(deftest test-plot-embeddings-omer
   (testing "should plot a co-occurrence sample of most frequent words in omer's data"
     (let [omer-corpus (tp/corpus omer-path)
-          {:keys [M word->idx]} (co-occurrence-matrix omer-corpus 4)
+          window 2
+          {:keys [M word->idx]} (co-occurrence-matrix omer-corpus window)
           M-normd (->> (reduce-to-k-dim M 2) (map #(m/normalise %)) m/matrix)
-          words (most-freq-words omer-corpus 20)]
-      (plot-embeddings M-normd word->idx "omer-test" (keys words)))))
+          words (most-freq-words omer-corpus 10)]
+      (plt/plot-embeddings M-normd word->idx (str "co-occurrence with n= " window) (keys words)))))
+
+(deftest test-sigmoid
+  (let [x (double (rand-int 1))]
+    (is (= (m/logistic x) (sigmoid x)))))
+
+(deftest test-softmax
+  (let [v [0.6 1.1 -1.5 1.2 3.2 -1.1]
+        exp-v [0.055 0.090 0.0067 0.10 0.74 0.010]
+        m [[1 2] [3 4]]
+        exp-m [[0.26894142, 0.73105858],
+               [0.26894142, 0.73105858]]]
+    (is (true? (m/equals exp-v (softmax v) HIGH_PRECISION)))
+    (is (true? (m/equals exp-m (softmax m) HIGH_PRECISION)))))
+
 ; ==========================================
