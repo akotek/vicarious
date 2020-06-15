@@ -4,7 +4,8 @@
             [vicarious.plotter :as plt]
             [vicarious.text-processor :as tp]
             [clojure.core.matrix :as m]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clojure.core.matrix.stats :as stats]))
 
 ; ==========================================
 ;; utils
@@ -99,6 +100,20 @@
           M-normd (->> (reduce-to-k-dim M 2) (map #(m/normalise %)) m/matrix)
           words (most-freq-words omer-corpus 10)]
       (plt/plot-embeddings M-normd word->idx (str "co-occurrence with n= " window) (keys words)))))
+
+(deftest test-similar-words
+  (testing "should return most n cosine-similar words"
+    (let [words '("a" "b" "c" "d")
+          word->idx (zipmap words (range (count words)))
+          M [[1 2 3 4],
+             [5 6 7 8]
+             [9 10 11 12]
+             [13 14 15 16]]
+          v1 (m/get-row M 0)
+          v2 (m/get-row M 1)
+          expected '("b c")]
+      (is (true? (m/equals [(stats/cosine-similarity v1 v2)] [(cosine-sim v1 v2)] LOW_PRECISION))
+          (= expected (similar-words M word->idx "a" 2))))))
 
 (deftest test-sigmoid
   (let [x (double (rand-int 1))]

@@ -62,9 +62,10 @@
   (let [words (keys (dissoc word->idx w))
         sim (for [w' words]
               (similarity M word->idx w w'))]
-    (->> (sort > sim)
+    (->> (zipmap sim words)
+         (sort-by >)
          (take n)
-         (zipmap words))))
+         vals)))
 
 (defn sigmoid [x]
   (/ 1
