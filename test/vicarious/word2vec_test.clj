@@ -38,7 +38,7 @@
 ;; tests
 
 (deftest test-distinct-words
-  (let [words (distinct-words corpus)]
+  (let [words (sort (distinct-words corpus))]
     (is (= (count corpus-words) (count words)))
     (is (= corpus-words words))))
 

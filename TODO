@@ -1,5 +1,21 @@
 
 ;TODO
-1. Finish word-embeddings on omers data
-2. analyse it words (with BOW & viz)
+
+anaylze:
+
+0. look abit on data
+0. different window size plotting and analysis
+1. most similar words - plot embeddings
+2. histogram - most frequent words visualization  >> WORD CLOUDS
+3. look at songs and their albums - clustering
+4. analysing rows of songs (need to re-scrape and add \n) and then see if rows (mishpatim) of songs are in same song cluster
+if rows are NOT belong to same song - maybe it's interesting????
+
+algorithms:
+1. build word2vec algorithm
 3. classify it
+
+
+
+problems:
+1. different lyricists write the songs

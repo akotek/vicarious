@@ -1,7 +1,6 @@
 (ns vicarious.word2vec
-  (:require [clojure.set :as set]
-            [clojure.core.matrix :as m]
-            [clojure.core.matrix.linear :as lin]))
+  (:require [clojure.core.matrix :as m]
+            [clojure.core.matrix.linear :as lm]))
 
 (m/set-current-implementation :vectorz)
 
@@ -29,13 +28,12 @@
 ;; API
 
 (defn distinct-words [nested-v]
-  (let [words (reduce (fn [s xs]
-                        (set/union s (set xs)))
-                      #{} nested-v)]
-    (vec (sort words))))
+  (->> nested-v
+       (mapcat #(identity %))
+       set))
 
 (defn co-occurrence-matrix [corpus n]
-  (let [words (distinct-words corpus)
+  (let [words (sort (distinct-words corpus))
         num-words (count words)
         word->idx (zipmap words (range num-words))
         shape (vec (repeat 2 num-words))
@@ -46,10 +44,27 @@
      :word->idx word->idx}))
 
 (defn reduce-to-k-dim [M k]
-  (let [{:keys [U S]} (lin/svd M {:return [:U :S]})
+  (let [{:keys [U S]} (lm/svd M {:return [:U :S]})
         U' (->> U (m/columns) (take k) (m/transpose))
         S' (->> S (take k) (m/diagonal-matrix))]
     (m/mmul U' S')))
+
+(defn cosine-sim [v1 v2]
+  (m/div
+    (m/dot v1 v2)
+    (m/dot (lm/norm v1) (lm/norm v2))))
+
+(defn similarity [M word->idx w1 w2]
+  (cosine-sim (m/get-row M (word->idx w1))
+              (m/get-row M (word->idx w2))))
+
+(defn similar-words [M word->idx w n]
+  (let [words (keys (dissoc word->idx w))
+        sim (for [w' words]
+              (similarity M word->idx w w'))]
+    (->> (sort > sim)
+         (take n)
+         (zipmap words))))
 
 (defn sigmoid [x]
   (/ 1
