@@ -1,6 +1,7 @@
 (ns vicarious.word2vec
   (:require [clojure.core.matrix :as m]
-            [clojure.core.matrix.linear :as lm]))
+            [clojure.core.matrix.linear :as lm]
+            [clojure.core.matrix.protocols :as mp]))
 
 (m/set-current-implementation :vectorz)
 
@@ -78,4 +79,13 @@
       (mapv f x)
       (f x))))
 
+(defn naive-softmax [center-vecs out-idx out-vecs data]
+  ;https://stats.stackexchange.com/questions/253244/gradients-for-skipgram-word2vec
+  (let [y-hat (softmax (m/dot out-vecs center-vecs)) ;P(o|c) = exp(u_oT * v_c) / (sigma-w (exp (u_wT * v_c)) Nx1
+        y'-y (m/sub ; Nx1
+               (m/get-row y-hat out-idx) 1)]
+    {:loss                 (-> y-hat (m/get-row out-idx) mp/log m/sub) ;-log(P(o|c)
+     :gradient-center-vec  (m/dot (m/transpose out-vecs) ;U.T(y'-y) Dx1
+                                  y'-y)
+     :gradient-outside-vec "gradient-outside-vec"}))        ;Nx1 dot 1xD > NxD
 ; ============================================================
