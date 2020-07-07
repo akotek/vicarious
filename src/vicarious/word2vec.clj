@@ -8,23 +8,15 @@
 ; ============================================================
 ;; utils
 
-(defn matrix-values [indices]
-  (-> (m/row-count indices)
-      (m/new-vector)
-      (m/add 1)))
+(defn occurrence-indices [corpus word->idx n]
+  (mapcat (fn [line]
+            (mapcat (fn [[w & words]]
+                      (map #(vector (word->idx w) (word->idx %)) words))
+                    (partition (inc n) 1 line))) corpus))
 
-(defn co-occur [M coll word->idx n]
-  (->> coll
-       (partition (inc n) 1)
-       (reduce (fn [M' xs]
-                 (let [indices (reduce (fn [coll w]
-                                         (let [fst (word->idx (first xs))
-                                               nxt (word->idx w)]
-                                           (conj coll [fst nxt] [nxt fst])))
-                                       [] (next xs))]
-                   (m/set-indices M' indices (matrix-values indices))))
-               M)))
-
+(defn inc' [M [x y]]
+  (m/mset M x y
+          (inc (m/mget M x y))))
 ; ============================================================
 ;; API
 
@@ -34,17 +26,17 @@
        set))
 
 (defn co-occurrence-matrix [corpus n]
-  (let [words (sort (distinct-words corpus))
-        num-words (count words)
-        word->idx (zipmap words (range num-words))
-        shape (vec (repeat 2 num-words))
-        M (reduce (fn [M' coll]
-                    (co-occur M' coll word->idx n))
-                  (m/zero-array shape) corpus)]
+  (let [word->idx (zipmap (sort (distinct-words corpus)) (range))
+        shape (vec (repeat 2 (count word->idx)))
+        M (->> (occurrence-indices corpus word->idx n)
+               (reduce (fn [M' loc]
+                         (-> (inc' M' loc)
+                             (inc' (reverse loc))))
+                       (m/zero-array shape)))]
     {:M         M
      :word->idx word->idx}))
 
-(defn reduce-to-k-dim [M k]
+(defn reduce-to-dim [k M]
   (let [{:keys [U S]} (lm/svd M {:return [:U :S]})
         U' (->> U (m/columns) (take k) (m/transpose))
         S' (->> S (take k) (m/diagonal-matrix))]

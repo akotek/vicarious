@@ -70,13 +70,13 @@
           expected (m/array [[18.52157747 6.47697214]
                              [49.81310011 1.91182038]
                              [81.10462276 -2.65333138]])
-          M (reduce-to-k-dim A 2)]
+          M (reduce-to-dim 2 A)]
       (is (true? (m/equals expected M LOW_PRECISION))))))
 
 (deftest test-dim-reduction-corpus
   (testing "should return reduced M matrix to k dimension, on given corpus data"
     (let [{:keys [M]} (co-occurrence-matrix corpus 1)
-          reduced (reduce-to-k-dim M 2)]
+          reduced (reduce-to-dim 2 M)]
       (is (= (m/shape reduced) [10 2])))))
 
 (deftest test-plot-embeddings
@@ -97,7 +97,7 @@
     (let [omer-corpus (tp/corpus omer-path)
           window 2
           {:keys [M word->idx]} (co-occurrence-matrix omer-corpus window)
-          M-normd (->> (reduce-to-k-dim M 2) (map #(m/normalise %)) m/matrix)
+          M-normd (->> (reduce-to-dim 2 M) (map #(m/normalise %)) m/matrix)
           words (most-freq-words omer-corpus 10)]
       (plt/plot-embeddings M-normd word->idx (str "co-occurrence with n= " window) (keys words)))))
 
