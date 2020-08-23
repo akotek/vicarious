@@ -33,10 +33,10 @@
 (defn tokenize [text]
   (->> text
        (s/trim)
-       (filter #(or (Character/isSpace %) (Character/isLetterOrDigit ^Character %)))
+       (filter #(or (Character/isSpaceChar ^Character %) (Character/isLetterOrDigit ^Character %) (= \' %)))
        (apply str)
        (s/lower-case)
-       (#(s/split % #"\s+"))))
+       (#(s/split % #"\s|'+"))))
 
 ; ============================================================
 ;; API
