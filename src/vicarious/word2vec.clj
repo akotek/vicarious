@@ -14,7 +14,7 @@
                       (map #(vector (word->idx w) (word->idx %)) words))
                     (partition (inc n) 1 line))) corpus))
 
-(defn inc' [M [x y]]
+(defn incr [M [x y]]
   (m/mset M x y
           (inc (m/mget M x y))))
 ; ============================================================
@@ -30,8 +30,8 @@
         shape (vec (repeat 2 (count word->idx)))
         M (->> (occurrence-indices corpus word->idx n)
                (reduce (fn [M' loc]
-                         (-> (inc' M' loc)
-                             (inc' (reverse loc))))
+                         (-> (incr M' loc)
+                             (incr (reverse loc))))
                        (m/zero-array shape)))]
     {:M         M
      :word->idx word->idx}))
@@ -55,10 +55,10 @@
   (let [words (keys (dissoc word->idx w))
         sim (for [w' words]
               (similarity M word->idx w w'))]
-    (->> (zipmap sim words)
-         (sort-by >)
+    (->> (zipmap words sim)
+         (sort-by val >)
          (take n)
-         vals)))
+         keys)))
 
 (defn sigmoid [x]
   (/ 1

@@ -9,5 +9,6 @@
                  [net.mikera/core.matrix "0.62.0"]
                  [net.mikera/vectorz-clj "0.48.0"]
                  [incanter "1.9.3"]
+                 [metasoarous/oz "1.5.0"]
                  [org.jsoup/jsoup "1.7.3"]]
   :repl-options {:init-ns vicarious.core})
